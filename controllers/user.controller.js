@@ -54,12 +54,31 @@ async function deleteUser(req, res) {
 }
 
 async function updateUser(req, res) {
-  const param = await req.params;
+  const param = req.params.id;
 
   console.log("Params :: ", param);
 
+  const user = await User.find({
+    username: param,
+  });
+
+  console.log("user :: ", user);
+
+  if (!user || user.length === 0) {
+    return res.json(new apiError(203, ...user, "User Details Not Found..."));
+  }
+  console.log("new :: ", user);
+
+  const updateUser = await User.findByIdAndUpdate(user[0]._id, {
+    $set: {
+      username: "I'm new",
+    },
+  });
+
+  console.log("updateUser :: ", updateUser);
+
   return res.json(
-    new apiResponse(2200, "Success", "User Details Sent Succesfully...")
+    new apiResponse(200, updateUser, "User Details Changed Succesfully...")
   );
 }
 
