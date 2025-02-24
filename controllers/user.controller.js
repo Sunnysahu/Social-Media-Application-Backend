@@ -29,9 +29,12 @@ async function getUserByID(req, res) {
     });
 
     console.log("User :: ", user);
-    res.json(new apiResponse(200, ...user, "User Details Sent Succesfully..."));
+    return res.json(
+      new apiResponse(200, ...user, "User Details Sent Succesfully...")
+    );
   } catch (error) {
     console.error("Error :: ", error);
+    return res.json(new apiError(203, ...user, "User Details Not Found..."));
   }
   // res.send({
   //   users: [{ id: 1, name: "John Doe" }],
