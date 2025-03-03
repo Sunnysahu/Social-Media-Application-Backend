@@ -11,9 +11,9 @@ import { isLogged } from "../../middlewares/authMiddleware.js";
 const router = express.Router();
 
 router.get("/", isLogged, getAllUsers);
-router.get("/getUserByID/:id", getUserByID);
-router.put("/:id", updateUser);
-router.delete("/deleteUser/:id", deleteUser);
+router.get("/getUserByID/:id", isLogged, getUserByID);
+router.put("/:id", isLogged, updateUser);
+router.delete("/deleteUser/:id", isLogged, deleteUser);
 
 // create more routes
 
