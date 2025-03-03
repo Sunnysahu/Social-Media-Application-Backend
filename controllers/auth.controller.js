@@ -1,5 +1,6 @@
 import { apiError, apiResponse } from "../utils/apiError.js";
 import User from "../models/user.model.js";
+import { sign } from "../utils/JWT.js";
 async function registerUser(req, res) {
   // get data from req.body
 
@@ -52,8 +53,6 @@ async function loginUser(req, res) {
   // get data from req.body
 
   const { email, password } = req.body;
-
-  console.log("Enteredn There 59:::::::", dataCheck);
   // username pass is not empty
 
   if (!password || !email) {
@@ -74,7 +73,9 @@ async function loginUser(req, res) {
   if (dataCheck && !dataCheck.length == 0) {
     console.log("::log", dataCheck);
 
-    return res.json(new apiResponse(200, dataCheck, "Data Found.... Enjoy"));
+    const token = sign({ _id: dataCheck[0]._id });
+
+    return res.json(new apiResponse(200, { ...dataCheck[0]._doc, token }, "Data Found.... Enjoy"));
   } else {
     return res.json(
       new apiError(201, ["No user Found"], "User Not Found !!!!")

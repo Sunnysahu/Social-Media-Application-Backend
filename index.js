@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { config } from "dotenv";
 
+config();
 import helmet from "helmet";
 import compression from "compression";
 import morgan from "morgan";
@@ -11,7 +12,6 @@ import authRoute from "./routes/v1/auth.routes.js";
 
 import DBConnect from "./utils/DBConnect.js";
 
-config();
 
 DBConnect();
 

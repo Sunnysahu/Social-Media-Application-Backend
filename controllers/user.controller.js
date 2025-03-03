@@ -4,6 +4,7 @@ import { apiError, apiResponse } from "../utils/apiError.js";
 async function getAllUsers(req, res) {
   //fetch all the user and retrun
 
+
   const data = await User.find();
 
   if (data)

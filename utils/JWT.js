@@ -1,6 +1,20 @@
-// Sign and Verify
+import jwt from 'jsonwebtoken';
+import { config } from "dotenv";
 
-//sign
+config();
+function sign(data) {
+    const SECRET_KEY = process.env.JWT_SECRET;
 
-const SECRET_KEY = process.env.JWT_SECRET;
-console.log(SECRET_KEY);
+    return jwt.sign(data, SECRET_KEY, { expiresIn: '1h' });
+}
+
+function verify(data) {
+    const SECRET_KEY = process.env.JWT_SECRET;
+
+    return jwt.verify(data, SECRET_KEY);
+}
+
+export {
+    sign,
+    verify
+}
