@@ -6,54 +6,83 @@ async function getAllUsers(req, res) {
 
   const data = await User.find();
 
-  if (data)
+  if (data.length !== 0)
     return res.json(new apiResponse(200, data, "All Data Sent Succesfully..."));
 
-  //   users: [
-  //     { id: 1, name: "John Doe" },
-  //     { id: 2, name: "Jane Smith" },
-  //     //... more users
-  //   ],
-  // });
+  // Return is there is 0 User
+
   return res.json(new apiError(404, data, "No Data Found!!!"));
 }
 
 async function getUserByID(req, res) {
   const { id } = req.params;
 
-  console.log("path:", id);
-
   try {
     const user = await User.find({
       username: id,
     });
 
-    console.log("User :: ", user);
-    res.json(new apiResponse(200, ...user, "User Details Sent Succesfully..."));
+    if (user.length !== 0)
+      return res.json(
+        new apiResponse(200, ...user, "User Details Sent Succesfully...")
+      );
+
+    return res.json(
+      new apiError(404, "User Not Found", "Please Check the Data Again!!!")
+    );
   } catch (error) {
     console.error("Error :: ", error);
+    return res.json(
+      new apiError(404, "Server Issue...", "Something is Wrong!!!")
+    );
   }
-  // res.send({
-  //   users: [{ id: 1, name: "John Doe" }],
-  // });
-
-  console.log("User Sent");
 }
 
 async function deleteUser(req, res) {
-  // res.send({
-  //   users: [{ id: 1, name: "Johnnn Doe" }],
-  // });
-  console.log("user Sent");
-  return res.json(
-    new apiResponse(200, "Success", "User Details Sent Succesfully...")
-  );
+  const { id } = req.params;
+
+  console.log("Deleting user with ID:", id);
+
+  try {
+    const user = await User.findOneAndDelete({ username: id });
+
+    console.log("User :: ", user);
+
+    if (!user) {
+      return res.json(new apiError(404, user, "User Not Found!!!!"));
+    }
+
+    return res.json(
+      new apiResponse(200, "Success", "User Details Deleted Succesfully...")
+    );
+  } catch (error) {
+    console.error("Error :: ", error);
+    return res.json(
+      new apiError(500, "Server Issue...", "Something is Wrong!!!")
+    );
+  }
 }
-
 async function updateUser(req, res) {
-  const param = await req.params;
+  const { id } = await req.params;
 
-  console.log("Params :: ", param);
+  console.log("Params :: ", id);
+
+  try {
+    const user = await User.findOneAndUpdate({ username: id });
+
+    if (!user) {
+      return res.json(new apiError(404, user, "User Not Found!!!!"));
+    }
+
+    return res.json(
+      new apiResponse(200, user, "User Updated Deleted Succesfully...")
+    );
+  } catch (error) {
+    console.error("Update Error :: ", error);
+    return res.json(
+      new apiError(500, "Server Issue...", "Something is Wrong!!!")
+    );
+  }
 
   return res.json(
     new apiResponse(2200, "Success", "User Details Sent Succesfully...")
