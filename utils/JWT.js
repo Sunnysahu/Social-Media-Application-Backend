@@ -25,3 +25,5 @@ const verifyToken = (token) => {
     return null;
   }
 };
+
+export { signToken, verifyToken };
