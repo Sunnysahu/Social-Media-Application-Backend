@@ -24,7 +24,6 @@ async function registerUser(req, res) {
   });
 
   if (dataCheck) {
-    console.log("::log", dataCheck);
     console.log("Enteredn Here 28:::::::");
 
     return res.json(
@@ -38,7 +37,6 @@ async function registerUser(req, res) {
 
   // create a new user in the database
 
-  console.log("Enteredn There 42:::::::", dataCheck);
   const user = await User.create({
     username,
     fullname,

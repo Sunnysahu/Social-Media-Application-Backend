@@ -83,10 +83,6 @@ async function updateUser(req, res) {
       new apiError(500, "Server Issue...", "Something is Wrong!!!")
     );
   }
-
-  return res.json(
-    new apiResponse(2200, "Success", "User Details Sent Succesfully...")
-  );
 }
 
 export { getAllUsers, getUserByID, updateUser, deleteUser };
