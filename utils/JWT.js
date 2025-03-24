@@ -25,6 +25,8 @@ const signToken = async (data) => {
       expiresIn: "1h",
     });
     console.log("signData :: ", signData);
+
+    return signData;
   } catch (error) {
     console.error("Error signing token :: ", error);
     return null;

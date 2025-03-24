@@ -57,7 +57,6 @@ async function loginUser(req, res) {
 
   const { email, password } = req.body;
 
-  console.log("Enteredn There 59:::::::", dataCheck);
   // username pass is not empty
 
   if (!password || !email) {
@@ -78,7 +77,11 @@ async function loginUser(req, res) {
   if (dataCheck && !dataCheck.length == 0) {
     console.log("::log", dataCheck);
 
-    return res.json(new apiResponse(200, dataCheck, "Data Found.... Enjoy"));
+    const token = await signToken(dataCheck[0]);
+
+    return res.json(
+      new apiResponse(200, { dataCheck, token }, "Data Found.... Enjoy")
+    );
   } else {
     return res.json(
       new apiError(201, ["No user Found"], "User Not Found !!!!")
