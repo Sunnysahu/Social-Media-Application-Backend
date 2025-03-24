@@ -27,11 +27,13 @@ async function getAllPost(req, res) {
   const allPost = await Post.find();
 
   if (!allPost.length) {
-    return res.json(new apiError(404, "No post found", "No Post Available"));
+    return res.json(
+      new apiError(404, "No post found!!!", "No Post Available!!!")
+    );
   }
 
   return res.json(
-    new apiResponse(200, allPost, "All Posts Feteched Successfully")
+    new apiResponse(200, allPost, "All Posts Feteched Successfully...")
   );
 }
 
