@@ -1,22 +1,30 @@
 import { config } from "dotenv";
 import jwt from "jsonwebtoken";
 
-import { apiError } from "./apiError";
+import { apiError } from "./apiError.js";
 
 config();
 
 //sign the Token
 
 const SERECT_KEY = process.env.JWT_SECRET;
-const signToken = (data, token) => {
+const signToken = async (data) => {
+  // const verify = verifyToken(token);
 
-  const verify = verifyToken(token)
-  if (verify) {
-    return res.json(new apiError(200, "Not a Valid/ Expired Token", "Expired Token"))
-  }
+  // if (verify) {
+  //   return res.json(
+  //     new apiError(200, "Not a Valid / Expired Token", "Expired Token")
+  //   );
+  // }
+
+  console.log("data", data);
 
   try {
-    return jwt.sign(data, SERECT_KEY, { expiresIn: "1h" });
+    // Extracting the Data Part only
+    const signData = jwt.sign(data._doc, SERECT_KEY, {
+      expiresIn: "1h",
+    });
+    console.log("signData :: ", signData);
   } catch (error) {
     console.error("Error signing token :: ", error);
     return null;
@@ -34,9 +42,7 @@ const verifyToken = (token) => {
   }
 };
 
-function refreshToken (refreshToken) {
-
-
+function refreshToken(refreshToken) {
   return null;
 }
 

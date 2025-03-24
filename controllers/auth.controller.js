@@ -1,5 +1,7 @@
 import { apiError, apiResponse } from "../utils/apiError.js";
 import User from "../models/user.model.js";
+
+import { signToken } from "../utils/JWT.js";
 async function registerUser(req, res) {
   // get data from req.body
 
@@ -45,6 +47,8 @@ async function registerUser(req, res) {
     profilePhoto,
   });
   // send success response
+  // user is an Mongoose Object so converting it into a Plain JS Object
+  signToken({ ...user });
 
   return res.json(new apiResponse(200, user, "All Success..."));
 }

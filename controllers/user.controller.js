@@ -65,18 +65,21 @@ async function deleteUser(req, res) {
 async function updateUser(req, res) {
   const { id } = await req.params;
 
-  console.log("Params :: ", id);
+  // console.log("id :: ", id);
+  console.log("Params :: ", req.body);
 
   try {
-    const user = await User.findOneAndUpdate({ username: id });
+    const user = await User.findOneAndUpdate(
+      { username: req.params.id },
+      { $set: req.body },
+      { new: true, runValidators: true }
+    );
 
     if (!user) {
       return res.json(new apiError(404, user, "User Not Found!!!!"));
     }
 
-    return res.json(
-      new apiResponse(200, user, "User Updated Deleted Succesfully...")
-    );
+    return res.json(new apiResponse(200, user, "User Updated Succesfully..."));
   } catch (error) {
     console.error("Update Error :: ", error);
     return res.json(
