@@ -45,3 +45,5 @@ app.listen(PORT, (err) => {
 
   console.log(`Server is running on port ${PORT}`);
 });
+
+// Create CRUD operations for every route Type (user, post and comment)
