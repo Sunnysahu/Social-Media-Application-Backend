@@ -17,18 +17,26 @@ const commentSchema = new Schema(
       required: [true, "Comment content is required"],
       trim: true,
     },
-    like: {
-      type: Schema.Types.ObjectId,
-      ref: "Like",
+    like: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    likeCount: {
+      type: Number,
     },
-    comment: {
+    reply: {
       type: Schema.Types.ObjectId,
       ref: "Comment",
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
+    replyCount: {
+      type: Number,
     },
+    // createdAt: {
+    //   type: Date,
+    //   default: Date.now,
+    // },
   },
   { timestamps: true }
 );

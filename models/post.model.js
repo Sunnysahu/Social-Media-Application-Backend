@@ -16,37 +16,41 @@ const postSchema = new Schema(
       trim: true,
       index: true,
     },
-    username: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "Username is Required"],
-      unique: true,
-      trim: true,
-      index: true,
-    },
-    profilePhoto: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
-    postImageOrText: {
+    postType: {
       type: String,
+      enum: ["text", "image", "pdf"],
       required: [true, "Image or Text String is Required"],
     },
-    postCaption: {
+    postText: {
       type: String,
     },
-    comments: {
-      type: Schema.Types.ObjectId,
-      ref: "Comment",
+    media: [{ type: Schema.Types.ObjectId, ref: "Media" }],
+    likes: [
+      {
+        type: Schema.Types.ObjectId, // _id will be stored Here in the array
+        ref: "User",
+      },
+    ],
+    likeCount: {
+      type: Number,
+      default: 0,
     },
-    likes: {
-      type: Schema.Types.ObjectId,
-      ref: "Like",
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+    commentCount: {
+      type: Number,
+      default: 0,
     },
-    shares: {
-      type: Schema.Types.ObjectId,
-      ref: "Share",
+    shareCount: {
+      type: Number,
+      default: 0,
     },
+
+    shares: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true }
 );
