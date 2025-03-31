@@ -5,23 +5,33 @@ import Post from "../models/post.model.js";
 import { verifyToken } from "../utils/JWT.js";
 
 async function createPost(req, res) {
-  // const verify = verifyToken(req.body?.token);
+  const verify = verifyToken(req.body?.token)._doc;
 
-  // console.log("verify :: ", verify);
+  console.log("verify :: ", verify);
 
-  // if (!verify) {
-  //   return res.json(
-  //     new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
-  //   );
-  // }
-  const { postImageorText, postCaption } = req.body;
-  const { user, username } = verify;
+  if (!verify) {
+    return res.json(
+      new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
+    );
+  }
+  // const { postImageorText, postCaption } = req.body;
+  const { _id, username } = verify;
+  const { text, postType } = req.body;
 
-  console.log("user and username : ", user, username);
+  console.log("user and username : ", _id, username);
 
-  const post = await Post.create({});
+  try {
+    const post = await Post.create({ userId: _id, text, postType });
 
-  return res.json(new apiError(401, verify, "Token Not Valid..."));
+    return res.json(
+      new apiResponse(200, { post: post._doc, verify }, "Post Created...")
+    );
+  } catch (error) {
+    console.error("Error Log", error.message);
+    return res.json(
+      new apiError(401, "Error While Creating the Post", "Post not Created!!!")
+    );
+  }
 }
 async function getAllPost(req, res) {
   const allPost = await Post.find();
