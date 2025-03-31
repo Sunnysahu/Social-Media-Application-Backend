@@ -5,15 +5,15 @@ import Post from "../models/post.model.js";
 import { verifyToken } from "../utils/JWT.js";
 
 async function createPost(req, res) {
-  const verify = verifyToken(req.body?.token);
+  // const verify = verifyToken(req.body?.token);
 
-  console.log("verify :: ", verify);
+  // console.log("verify :: ", verify);
 
-  if (!verify) {
-    return res.json(
-      new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
-    );
-  }
+  // if (!verify) {
+  //   return res.json(
+  //     new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
+  //   );
+  // }
   const { postImageorText, postCaption } = req.body;
   const { user, username } = verify;
 

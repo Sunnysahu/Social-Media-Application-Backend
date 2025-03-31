@@ -46,11 +46,20 @@ async function registerUser(req, res) {
     email,
     profilePhoto,
   });
+
   // send success response
   // user is an Mongoose Object so converting it into a Plain JS Object
-  signToken({ ...user });
+  console.log("user", user._doc);
 
-  return res.json(new apiResponse(200, user, "All Success..."));
+  const createdToken = await signToken(user._doc);
+
+  return res.json(
+    new apiResponse(
+      200,
+      { ...user._doc, token: createdToken },
+      "All Success..."
+    )
+  );
 }
 async function loginUser(req, res) {
   // get data from req.body
@@ -77,7 +86,7 @@ async function loginUser(req, res) {
   if (dataCheck && !dataCheck.length == 0) {
     console.log("::log", dataCheck);
 
-    const token = await signToken(dataCheck[0]);
+    const token = await signToken({ ...dataCheck[0] });
 
     return res.json(
       new apiResponse(200, { dataCheck, token }, "Data Found.... Enjoy")

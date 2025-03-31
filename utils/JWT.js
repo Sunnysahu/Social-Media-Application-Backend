@@ -17,11 +17,11 @@ const signToken = async (data) => {
   //   );
   // }
 
-  console.log("data", data);
+  console.log("datas", data);
 
   try {
     // Extracting the Data Part only
-    const signData = jwt.sign(data._doc, SERECT_KEY, {
+    const signData = jwt.sign(data, SERECT_KEY, {
       expiresIn: "1h",
     });
     console.log("signData :: ", signData);
