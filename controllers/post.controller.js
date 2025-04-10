@@ -3,25 +3,39 @@ import { apiError, apiResponse } from "../utils/apiError.js";
 import Post from "../models/post.model.js";
 
 import { verifyToken } from "../utils/JWT.js";
+// import { token } from "morgan";
+
+const checkJWT = async (req) => {
+  const token = req.body?.token;
+  const result = await verifyToken(token)._doc;
+  console.log("Res :: ", result);
+
+  return result;
+};
 
 async function createPost(req, res) {
-  const verify = verifyToken(req.body?.token)._doc;
+  // const verify = await checkJWT(req);
+  const verifiedUser = verifyToken(req.body?.token);
 
-  console.log("verify :: ", verify);
-
-  if (!verify) {
+  if (!verifiedUser) {
     return res.json(
       new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
     );
   }
+
+  const verify = verifiedUser._doc;
+  console.log("verify :: ", verify);
+
   // const { postImageorText, postCaption } = req.body;
   const { _id, username } = verify;
   const { text, postType } = req.body;
 
   console.log("user and username : ", _id, username);
+  console.log("text", text);
+  console.log("text2", postType);
 
   try {
-    const post = await Post.create({ userId: _id, text, postType });
+    const post = await Post.create({ userId: _id, postText: text, postType });
 
     return res.json(
       new apiResponse(200, { post: post._doc, verify }, "Post Created...")
@@ -67,4 +81,6 @@ async function getPostById(req, res) {
   }
 }
 
-export { getAllPost, getPostById, createPost };
+async function deletePostById(req, res) {}
+
+export { getAllPost, getPostById, createPost, deletePostById };
