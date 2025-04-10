@@ -40,17 +40,16 @@ const postSchema = new Schema(
       type: Number,
       default: 0,
     },
-    shareCount: {
-      type: Number,
-      default: 0,
-    },
-
     shares: [
       {
         type: Schema.Types.ObjectId,
         ref: "User",
       },
     ],
+    shareCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
