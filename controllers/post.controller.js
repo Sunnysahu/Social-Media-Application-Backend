@@ -93,7 +93,7 @@ async function getAllPost(req, res) {
 async function getPostById(req, res) {
   const verifiedUser = verifyToken(req.body?.token);
 
-  console.log("Dock", verifiedUser);
+  console.log("Dock", verifiedUser._doc);
 
   if (!verifiedUser) {
     return res.json(
@@ -101,18 +101,17 @@ async function getPostById(req, res) {
     );
   }
 
-  const { id } = await req.params;
-
   try {
-    const post = await Post.Find({ _id: id });
+    const { id } = req.params;
+    console.log("Id", id);
+
+    const post = await Post.findById(id);
 
     if (!post) {
       return res.json(new apiError(404, "No post found", "No Post Available"));
     }
 
-    return res.json(
-      new apiResponse(200, postMessage, "Post Succesfully Feteched...")
-    );
+    return res.json(new apiResponse(200, post, "Post Succesfully Feteched..."));
   } catch (error) {
     return res.json(
       new apiError(500, "Server Issue...", "Something is Wrong!!!")
