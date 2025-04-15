@@ -131,13 +131,8 @@ async function updatePostById(req, res) {
     );
   }
 
-  // const user = verifiedUser._doc;
-
   const { id } = req.params;
   const { postType, postText, media } = req.body;
-
-  // console.log("USer", user);
-  // console.log("id", id);
 
   const updatedPost = await Post.findByIdAndUpdate(
     id,
