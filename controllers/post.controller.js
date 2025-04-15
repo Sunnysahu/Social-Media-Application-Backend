@@ -34,6 +34,8 @@ async function createPost(req, res) {
 
   // const { postImageorText, postCaption } = req.body;
   const { _id, username } = verify;
+  // The variable should match with the postman or frontend you're passing
+
   const { postText, postType } = req.body;
 
   console.log("user and username : ", _id, username);
@@ -41,10 +43,18 @@ async function createPost(req, res) {
   console.log("text2", postType);
 
   try {
+    // Example --> NAME_IN_SCHEMA : FORNTEND_VARIABLE_NAME
     const post = await Post.create({
       userId: _id,
       postText: postText,
       postType: postType,
+      media: [],
+      likes: [], // Can leave blank as its already an array as per the schema
+      likeCount: 0, // Already Initialled with 0
+      comments: [],
+      commentCount: 0,
+      shares: [],
+      sharesCount: 0,
     });
 
     return res.json(
