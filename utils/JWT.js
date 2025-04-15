@@ -39,7 +39,7 @@ const verifyToken = (token) => {
   try {
     return jwt.verify(token, SERECT_KEY);
   } catch (error) {
-    console.error("Error verifying token :: ", error);
+    // console.error("Error verifying token :: ", error);
     return null;
   }
 };

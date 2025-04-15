@@ -3,18 +3,24 @@ import { apiError, apiResponse } from "../utils/apiError.js";
 import Post from "../models/post.model.js";
 
 import { verifyToken } from "../utils/JWT.js";
-// import { token } from "morgan";
 
-const checkJWT = async (req) => {
+const checkJWT = async (req, res) => {
   const token = req.body?.token;
-  const result = await verifyToken(token)._doc;
-  console.log("Res :: ", result);
+  const result = verifyToken(token);
 
-  return result;
+  if (!result || result == null) {
+    return res.json(
+      new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
+    );
+  }
+  // console.log("Res :: ", result._doc);
+
+  console.log("Now Here");
+
+  return result._doc;
 };
 
 async function createPost(req, res) {
-  // const verify = await checkJWT(req);
   const verifiedUser = verifyToken(req.body?.token);
 
   if (!verifiedUser) {
@@ -28,14 +34,18 @@ async function createPost(req, res) {
 
   // const { postImageorText, postCaption } = req.body;
   const { _id, username } = verify;
-  const { text, postType } = req.body;
+  const { postText, postType } = req.body;
 
   console.log("user and username : ", _id, username);
-  console.log("text", text);
+  console.log("text", postText);
   console.log("text2", postType);
 
   try {
-    const post = await Post.create({ userId: _id, postText: text, postType });
+    const post = await Post.create({
+      userId: _id,
+      postText: postText,
+      postType: postType,
+    });
 
     return res.json(
       new apiResponse(200, { post: post._doc, verify }, "Post Created...")
@@ -47,7 +57,16 @@ async function createPost(req, res) {
     );
   }
 }
+
 async function getAllPost(req, res) {
+  const checkuser = verifyToken(req.body?.token);
+
+  if (!checkuser) {
+    return res.json(
+      new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
+    );
+  }
+
   const allPost = await Post.find();
 
   if (!allPost.length) {
@@ -62,6 +81,16 @@ async function getAllPost(req, res) {
 }
 
 async function getPostById(req, res) {
+  const verifiedUser = verifyToken(req.body?.token);
+
+  console.log("Dock", verifiedUser);
+
+  if (!verifiedUser) {
+    return res.json(
+      new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
+    );
+  }
+
   const { id } = await req.params;
 
   try {
