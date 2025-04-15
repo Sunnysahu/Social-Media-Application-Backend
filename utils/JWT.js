@@ -24,7 +24,7 @@ const signToken = async (data) => {
     const signData = jwt.sign(data, SERECT_KEY, {
       expiresIn: "1h",
     });
-    console.log("signData :: ", signData);
+    // console.log("signData :: ", signData);
 
     return signData;
   } catch (error) {

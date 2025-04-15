@@ -12,10 +12,10 @@ const router = express.Router();
 
 router.get("/", getAllPost);
 
-router.get("/create", createPost);
+router.post("/create", createPost);
 
 router.get("/getPost/:id", getPostById); //Create this in controller
-router.get("/updatePost/:id", updatePostById); //Create this in controller
-router.get("/deletePost/:id", deletePostById); //Create this in controller
+router.post("/updatePost/:id", updatePostById); //Create this in controller
+router.delete("/deletePost/:id", deletePostById); //Create this in controller
 
 export default router;

@@ -3,6 +3,7 @@ import { apiError, apiResponse } from "../utils/apiError.js";
 import Post from "../models/post.model.js";
 
 import { verifyToken } from "../utils/JWT.js";
+import { json } from "express";
 
 const checkJWT = async (req, res) => {
   const token = req.body?.token;
@@ -119,8 +120,36 @@ async function getPostById(req, res) {
   }
 }
 
-async function deletePostById(req, res) {}
+async function updatePostById(req, res) {
+  console.log("Here");
 
-async function updatePostById(req, res) {}
+  const verifiedUser = verifyToken(req.body?.token);
+
+  if (!verifiedUser) {
+    return res.json(
+      new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
+    );
+  }
+
+  // const user = verifiedUser._doc;
+
+  const { id } = req.params;
+  const { postType, postText, media } = req.body;
+
+  // console.log("USer", user);
+  // console.log("id", id);
+
+  const updatedPost = await Post.findByIdAndUpdate(
+    id,
+    { postText: postText, postType: postType, media: media },
+    { new: true } // return updated doc & validate
+  );
+
+  return res.json(
+    new apiResponse(200, updatedPost, "Post Updated Succesfully...")
+  );
+}
+
+async function deletePostById(req, res) {}
 
 export { getAllPost, getPostById, createPost, deletePostById, updatePostById };
