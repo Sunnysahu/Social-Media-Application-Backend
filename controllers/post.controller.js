@@ -121,4 +121,6 @@ async function getPostById(req, res) {
 
 async function deletePostById(req, res) {}
 
-export { getAllPost, getPostById, createPost, deletePostById };
+async function updatePostById(req, res) {}
+
+export { getAllPost, getPostById, createPost, deletePostById, updatePostById };
