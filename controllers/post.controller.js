@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { apiError, apiResponse } from "../utils/apiError.js";
 
 import Post from "../models/post.model.js";
@@ -104,6 +105,12 @@ async function getPostById(req, res) {
 
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.json(
+        new apiError(400, "Invalid Post ID", "Please provide a valid Post ID")
+      );
+    }
     console.log("Id", id);
 
     const post = await Post.findById(id);
@@ -111,6 +118,7 @@ async function getPostById(req, res) {
     if (!post) {
       return res.json(new apiError(404, "No post found", "No Post Available"));
     }
+    console.log("Post", post);
 
     return res.json(new apiResponse(200, post, "Post Succesfully Feteched..."));
   } catch (error) {
@@ -132,6 +140,13 @@ async function updatePostById(req, res) {
   }
 
   const { id } = req.params;
+
+  // Checking this as ID can be Invalid
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.json(
+      new apiError(400, "Invalid Post ID", "Please provide a valid Post ID")
+    );
+  }
   const { postType, postText, media } = req.body;
 
   const updatedPost = await Post.findByIdAndUpdate(
@@ -145,6 +160,34 @@ async function updatePostById(req, res) {
   );
 }
 
-async function deletePostById(req, res) {}
+async function deletePostById(req, res) {
+  const verifiedUser = verifyToken(req.body?.token);
+
+  if (!verifiedUser) {
+    return res.json(
+      new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
+    );
+  }
+
+  try {
+    const { id } = req.params;
+
+    const deletePost = await Post.findByIdAndDelete(id);
+
+    if (!deletePost) {
+      return res.json(new apiError(404, "No post found", "No Post Available"));
+    }
+
+    console.log("Post", deletePost);
+
+    return res.json(
+      new apiResponse(200, deletePost, "Post Deleted Succesfully")
+    );
+  } catch (error) {
+    return res.json(
+      new apiError(500, "Server Issue...", "Something is Wrong!!!")
+    );
+  }
+}
 
 export { getAllPost, getPostById, createPost, deletePostById, updatePostById };
