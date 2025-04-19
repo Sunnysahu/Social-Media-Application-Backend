@@ -25,10 +25,13 @@ const commentSchema = new Schema(
     likeCount: {
       type: Number,
     },
-    reply: {
-      type: Schema.Types.ObjectId,
-      ref: "Comment",
-    },
+    reply: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
+
     replyCount: {
       type: Number,
     },
