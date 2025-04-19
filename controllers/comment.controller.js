@@ -78,8 +78,6 @@ const createComment = async (req, res) => {
       new apiError(500, "Server Issue...", "Something is Wrong!!!")
     );
   }
-
-  return res.json(new apiResponse(200, "All Good", "Works Well"));
 };
 
 export default createComment;
