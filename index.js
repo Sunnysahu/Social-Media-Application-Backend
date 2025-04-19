@@ -9,6 +9,7 @@ import morgan from "morgan";
 import userRoute from "./routes/v1/user.routes.js";
 import authRoute from "./routes/v1/auth.routes.js";
 import postRoute from "./routes/v1/post.routes.js";
+import commentRoute from "./routes/v1/comment.route.js";
 
 import DBConnect from "./utils/DBConnect.js";
 
@@ -32,6 +33,7 @@ app.use(helmet()); //Remove unnecessary Data from header
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/post", postRoute);
+app.use("/api/v1/comment", commentRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello, World!");

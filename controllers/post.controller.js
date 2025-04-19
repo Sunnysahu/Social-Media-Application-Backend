@@ -36,8 +36,8 @@ async function createPost(req, res) {
 
   // const { postImageorText, postCaption } = req.body;
   const { _id, username } = verify;
-  // The variable should match with the postman or frontend you're passing
 
+  // The variable should match with the postman or frontend you're passing
   const { postText, postType } = req.body;
 
   console.log("user and username : ", _id, username);
@@ -147,6 +147,7 @@ async function updatePostById(req, res) {
       new apiError(400, "Invalid Post ID", "Please provide a valid Post ID")
     );
   }
+
   const { postType, postText, media } = req.body;
 
   const updatedPost = await Post.findByIdAndUpdate(
@@ -171,6 +172,12 @@ async function deletePostById(req, res) {
 
   try {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.json(
+        new apiError(400, "Invalid Post ID", "Please provide a valid Post ID")
+      );
+    }
 
     const deletePost = await Post.findByIdAndDelete(id);
 

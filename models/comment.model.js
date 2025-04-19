@@ -15,7 +15,6 @@ const commentSchema = new Schema(
     text: {
       type: String,
       required: [true, "Comment content is required"],
-      trim: true,
     },
     like: [
       {
@@ -33,6 +32,7 @@ const commentSchema = new Schema(
     replyCount: {
       type: Number,
     },
+    media: [{ type: Schema.Types.ObjectId, ref: "Media" }],
     // createdAt: {
     //   type: Date,
     //   default: Date.now,
