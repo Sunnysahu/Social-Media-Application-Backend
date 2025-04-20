@@ -8,6 +8,8 @@ import Post from "../models/post.model.js";
 import { verifyToken } from "../utils/JWT.js";
 
 const createComment = async (req, res) => {
+  console.log("Now");
+
   const verifiedUser = verifyToken(req.body?.token);
 
   if (!verifiedUser) {
