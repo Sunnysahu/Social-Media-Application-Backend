@@ -35,7 +35,9 @@ const commentSchema = new Schema(
     replyCount: {
       type: Number,
     },
+    replyTo: { type: Schema.Types.ObjectId, ref: "Comment" },
     media: [{ type: Schema.Types.ObjectId, ref: "Media" }],
+
     // createdAt: {
     //   type: Date,
     //   default: Date.now,

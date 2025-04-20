@@ -20,7 +20,7 @@ const createComment = async (req, res) => {
 
   try {
     const { id } = req.params;
-    const { text, media } = req.body;
+    const { text, media, reply } = req.body;
 
     console.log("Id", id);
 
@@ -44,6 +44,7 @@ const createComment = async (req, res) => {
       text: text,
       like: [],
       likeCount: 0,
+      reply: [],
       replyCount: 0,
       media: media || [],
     });
@@ -55,7 +56,7 @@ const createComment = async (req, res) => {
       );
     }
 
-    const updateComment = await Post.findByIdAndUpdate(
+    const updatePostComment = await Post.findByIdAndUpdate(
       id,
       {
         $push: { comments: comment._id },
@@ -64,7 +65,7 @@ const createComment = async (req, res) => {
       { new: true }
     );
 
-    if (!updateComment) {
+    if (!updatePostComment) {
       return res.json(
         new apiError(500, "Server Issue...", "Something is Wrong!!!")
       );
@@ -80,4 +81,78 @@ const createComment = async (req, res) => {
   }
 };
 
+// const error = () => {
+//   return res.json(
+//     new apiError(500, "Server Issue...", "Something is Wrong!!!")
+//   );
+// };
+
 export default createComment;
+
+const replyComment = async (req, res) => {
+  const verifiedUser = verifyToken(req.body?.token);
+  if (!verifiedUser) {
+    return res.json(
+      new apiError(404, "Unauthorized Access!!!", "Token Not Found")
+    );
+  }
+  try {
+    const { id } = req.params;
+    const { text, media, postId } = req.body;
+    console.log("Reply", id);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.json(
+        new apiError(400, "Invalid Post ID", "Please provide a valid Post ID")
+      );
+    }
+    const replyComment = await Comment.create({
+      user: verifiedUser._doc._id,
+      text: text,
+      like: [],
+      likeCount: 0,
+      reply: [],
+      replyCount: 0,
+      media: media || [],
+      replyTo: id,
+    });
+
+    if (!replyComment) {
+      return res.json(
+        new apiError(500, "Server Issue...", "Something is Wrong!!!")
+      );
+    }
+    const updatedComment = await Comment.findByIdAndUpdate(id, {
+      $push: { reply: replyComment._id },
+      $inc: { replyCount: 1 },
+    });
+    if (!updatedComment) {
+      return res.json(
+        new apiError(500, "Server Issue...", "Something is Wrong!!!")
+      );
+    }
+    console.log("Here", updatedComment);
+    const updatePostCommentCount = await Post.findByIdAndUpdate(
+      verifiedUser._doc._id,
+      {
+        $inc: { commentCount: 1 },
+      }
+      // ,
+      // { new: true }
+    );
+    console.log("Here1", updatePostCommentCount);
+    if (updatePostCommentCount) {
+      return res.json(
+        new apiError(500, "Server Issue...", "Something is Wrong!!!")
+      );
+    }
+    return res.json(
+      new apiResponse(201, replyComment, "Comment created successfully...")
+    );
+  } catch (error) {
+    return res.json(
+      new apiError(500, "Server Issue...", "Something is Wrong!!!")
+    );
+  }
+};
+
+export { createComment, replyComment };
