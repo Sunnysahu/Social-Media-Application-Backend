@@ -58,20 +58,20 @@ const createComment = async (req, res) => {
       );
     }
 
-    const updatePostComment = await Post.findByIdAndUpdate(
-      id,
-      {
-        $push: { comments: comment._id },
-        $inc: { commentCount: 1 },
-      },
-      { new: true }
-    );
+    // const updatePostComment = await Post.findByIdAndUpdate(
+    //   id,
+    //   {
+    //     $push: { comments: comment._id },
+    //     $inc: { commentCount: 1 },
+    //   },
+    //   { new: true }
+    // );
 
-    if (!updatePostComment) {
-      return res.json(
-        new apiError(500, "Server Issue...", "Something is Wrong!!!")
-      );
-    }
+    // if (!updatePostComment) {
+    //   return res.json(
+    //     new apiError(500, "Server Issue...", "Something is Wrong!!!")
+    //   );
+    // }
 
     return res.json(
       new apiResponse(201, comment, "Comment created successfully...")
