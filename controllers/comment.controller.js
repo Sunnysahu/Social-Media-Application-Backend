@@ -89,8 +89,6 @@ const createComment = async (req, res) => {
 //   );
 // };
 
-export default createComment;
-
 const replyComment = async (req, res) => {
   const verifiedUser = verifyToken(req.body?.token);
   if (!verifiedUser) {
@@ -104,7 +102,11 @@ const replyComment = async (req, res) => {
     console.log("Reply", id);
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.json(
-        new apiError(400, "Invalid Post ID", "Please provide a valid Post ID")
+        new apiError(
+          400,
+          "Invalid Comment ID",
+          "Please provide a valid Comment ID"
+        )
       );
     }
     const replyComment = await Comment.create({
@@ -137,9 +139,8 @@ const replyComment = async (req, res) => {
       verifiedUser._doc._id,
       {
         $inc: { commentCount: 1 },
-      }
-      // ,
-      // { new: true }
+      },
+      { new: true }
     );
     console.log("Here1", updatePostCommentCount);
     if (updatePostCommentCount) {
