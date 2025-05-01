@@ -197,4 +197,60 @@ async function deletePostById(req, res) {
   }
 }
 
-export { getAllPost, getPostById, createPost, deletePostById, updatePostById };
+async function likePost(req, res) {
+  const verifiedUser = verifyToken(req.body?.token);
+  if (!verifiedUser) {
+    return res.json(
+      new apiError(404, "Unauthorized Access!!!", "Token Not Found")
+    );
+  }
+
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.json(
+        new apiError(
+          400,
+          "Invalid Comment ID",
+          "Please provide a valid Comment ID"
+        )
+      );
+    }
+
+    const { postId } = req.body;
+
+    const updateLike = await Post.findByIdAndUpdate(
+      postId,
+      {
+        $push: { likes: id },
+        $inc: { likeCount: 1 },
+      },
+      { new: true }
+    );
+
+    console.log("like", updateLike);
+
+    if (!updateLike) {
+      return res.json(
+        new apiError(500, "Server Issue...", "Something is Wrong!!!")
+      );
+    }
+
+    return res.json(
+      new apiResponse(201, updateLike, "Like created successfully...")
+    );
+  } catch (error) {
+    return res.json(
+      new apiError(500, "Server Issue...", "Something is Wrong!!!")
+    );
+  }
+}
+
+export {
+  getAllPost,
+  getPostById,
+  createPost,
+  deletePostById,
+  updatePostById,
+  likePost,
+};

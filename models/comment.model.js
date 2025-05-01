@@ -46,5 +46,21 @@ const commentSchema = new Schema(
   { timestamps: true }
 );
 
+commentSchema.post("save", async function (doc, next) {
+  try {
+    // Only increment if it's a top-level comment (not a reply)
+    if (!doc.replyTo && doc.postId) {
+      await Post.findByIdAndUpdate(doc.postId, {
+        $inc: { commentCount: 1 },
+        $push: { comments: doc._id },
+      });
+    }
+    next();
+  } catch (err) {
+    console.error("Error in comment post-save hook:", err);
+    next(err);
+  }
+});
+
 export default mongoose.model.Comment ||
   mongoose.model("Comment", commentSchema);
