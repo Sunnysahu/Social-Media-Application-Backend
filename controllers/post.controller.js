@@ -93,16 +93,6 @@ async function getAllPost(req, res) {
 }
 
 async function getPostById(req, res) {
-  const verifiedUser = verifyToken(req.body?.token);
-
-  console.log("Dock", verifiedUser._doc);
-
-  if (!verifiedUser) {
-    return res.json(
-      new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
-    );
-  }
-
   try {
     const { id } = req.params;
 
@@ -131,14 +121,6 @@ async function getPostById(req, res) {
 async function updatePostById(req, res) {
   console.log("Here");
 
-  const verifiedUser = verifyToken(req.body?.token);
-
-  if (!verifiedUser) {
-    return res.json(
-      new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
-    );
-  }
-
   const { id } = req.params;
 
   // Checking this as ID can be Invalid
@@ -162,14 +144,6 @@ async function updatePostById(req, res) {
 }
 
 async function deletePostById(req, res) {
-  const verifiedUser = verifyToken(req.body?.token);
-
-  if (!verifiedUser) {
-    return res.json(
-      new apiError(401, "Unauthorized Access!!!", "Token Not Valid...")
-    );
-  }
-
   try {
     const { id } = req.params;
 

@@ -1,5 +1,7 @@
 import express from "express";
 
+import { verifyJWT } from "../../services/verifyJWT.js";
+
 import {
   getAllUsers,
   getUserByID,
@@ -9,10 +11,10 @@ import {
 
 const router = express.Router();
 
-router.get("/", getAllUsers);
-router.get("/getUserByID/:id", getUserByID);
-router.put("/:id", updateUser);
-router.delete("/deleteUser/:id", deleteUser);
+router.get("/", verifyJWT, getAllUsers);
+router.get("/getUserByID/:id", verifyJWT, getUserByID);
+router.put("/updateUserByID/:id", verifyJWT, updateUser);
+router.delete("/deleteUser/:id", verifyJWT, deleteUser);
 
 // create more routes
 

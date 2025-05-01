@@ -15,6 +15,8 @@ async function getAllUsers(req, res) {
 }
 
 async function getUserByID(req, res) {
+  console.log("Hello");
+
   const { id } = req.params;
 
   try {
@@ -63,10 +65,10 @@ async function deleteUser(req, res) {
   }
 }
 async function updateUser(req, res) {
-  const { id } = await req.params;
+  // const { id } = await req.params;
 
   // console.log("id :: ", id);
-  console.log("Params :: ", req.body);
+  // console.log("Params :: ", req.body);
 
   try {
     const user = await User.findOneAndUpdate(
